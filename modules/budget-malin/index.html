@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Budget-Malin — Étudiant-Malin</title>
+  <link rel="stylesheet" href="css/budget.css" />
+</head>
+<body>
+  <!-- Barre parente commune -->
+  <div class="em-parent-bar">
+    <div class="container em-parent-bar__inner">
+      <a href="../../index.html" class="em-back-link">← Étudiant-Malin</a>
+      <div class="em-parent-bar__right">
+        <span id="em-sync-status" class="em-sync-badge">Connexion...</span>
+        <span id="em-user-email" style="opacity: 0.78;"></span>
+        <button type="button" id="em-btn-logout" class="em-parent-logout">Déconnexion</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- En-tête Budget-Malin -->
+  <header class="bm-header">
+    <div class="container bm-header__inner">
+      <div class="bm-brand">
+        <div class="bm-brand__icon">€</div>
+        <div>
+          <div class="bm-brand__title">Budget-Malin</div>
+          <div class="bm-brand__sub">Pilotage étudiant sur-mesure</div>
+        </div>
+      </div>
+
+      <div class="month-switcher" role="group" aria-label="Sélection du mois">
+        <button type="button" id="btn-prev-month" title="Mois précédent">‹</button>
+        <span id="current-month-label">Novembre 2026</span>
+        <button type="button" id="btn-next-month" title="Mois suivant">›</button>
+      </div>
+
+      <div class="bm-actions">
+        <button type="button" class="btn btn--subtle btn--sm" id="btn-toggle-kpi-panel">
+          Personnaliser KPI
+        </button>
+        <button type="button" class="btn btn--subtle btn--sm" id="btn-sync-batch" title="Importer le budget courses depuis Batch-Malin">
+          Sync Batch-Malin
+        </button>
+        <button type="button" class="btn btn--primary btn--sm" id="btn-open-parent-report">
+          Fiche Récap Parents
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container bm-main">
+    <!-- Bannière de configuration rapide (masquable ou réutilisable) -->
+    <section id="preset-banner" class="preset-banner">
+      <div class="preset-banner__text">
+        <h2>Adapte ton espace en 1 clic (100 % modifiable ensuite)</h2>
+        <p>Choisis un modèle de départ selon ta situation financière, ou construis tes propres enveloppes.</p>
+      </div>
+      <div class="preset-pills">
+        <button type="button" class="btn btn--subtle btn--sm" data-apply-preset="parents_support">
+          Soutien Parents + Perso
+        </button>
+        <button type="button" class="btn btn--subtle btn--sm" data-apply-preset="independent">
+          Indépendant / Boursier
+        </button>
+        <button type="button" class="btn btn--subtle btn--sm" data-apply-preset="minimal">
+          Minimaliste (Totaux seuls)
+        </button>
+      </div>
+    </section>
+
+    <!-- Panneau modulable des KPIs -->
+    <section id="kpi-customizer" class="kpi-customizer hidden">
+      <div class="card__head" style="margin-bottom: 4px;">
+        <h3 class="card__title">Choisis les chiffres clés affichés sur ton tableau de bord</h3>
+        <button type="button" class="btn btn--subtle btn--sm" id="btn-close-kpi-panel">Fermer</button>
+      </div>
+      <div id="kpi-toggles-list" class="kpi-customizer__grid"></div>
+    </section>
+
+    <!-- Bento Grid des Chiffres Clés -->
+    <section id="kpi-grid" class="kpi-grid" aria-label="Indicateurs clés"></section>
+
+    <!-- Section Revenus / Charges Fixes + Graphique de répartition -->
+    <section class="workspace-grid">
+      <div class="card">
+        <div class="card__head">
+          <div>
+            <h2 class="card__title">Ressources &amp; Charges fixes</h2>
+            <p class="card__hint">Reconduits automatiquement chaque mois</p>
+          </div>
+          <div style="display: flex; gap: 6px;">
+            <button type="button" class="btn btn--subtle btn--sm" id="btn-add-income">+ Revenu</button>
+            <button type="button" class="btn btn--subtle btn--sm" id="btn-add-fixed">+ Charge fixe</button>
+          </div>
+        </div>
+
+        <h3 style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-secondary); margin: 8px 0 6px;">
+          Entrées d'argent (Parents / Perso)
+        </h3>
+        <ul id="incomes-list" class="ledger-list"></ul>
+
+        <h3 style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-secondary); margin: 16px 0 6px;">
+          Charges fixes (Loyer, Élec, Abonnements...)
+        </h3>
+        <ul id="fixed-list" class="ledger-list"></ul>
+      </div>
+
+      <div class="card">
+        <div class="card__head">
+          <div>
+            <h2 class="card__title">Répartition des dépenses</h2>
+            <p class="card__hint">Vue consolidée Charges fixes + Enveloppes variables</p>
+          </div>
+        </div>
+        <div id="chart-container" class="chart-layout"></div>
+      </div>
+    </section>
+
+    <!-- Section Enveloppes Variables Modulables -->
+    <section>
+      <div class="card__head">
+        <div>
+          <h2 class="card__title" style="font-size: 1.2rem;">Enveloppes de dépenses modulables</h2>
+          <p class="card__hint">
+            Bascule chaque catégorie entre <strong>Saisie détaillée</strong> (ticket par ticket) et <strong>Total mensuel</strong> (1 seul chiffre).
+          </p>
+        </div>
+        <button type="button" class="btn btn--primary btn--sm" id="btn-add-envelope">
+          + Nouvelle enveloppe
+        </button>
+      </div>
+      <div id="envelopes-grid" class="envelopes-grid"></div>
+    </section>
+  </main>
+
+  <!-- Modale universelle d'ajout (Revenu / Charge fixe / Enveloppe / Dépense) -->
+  <div id="entry-modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal__backdrop" data-close-modal="true"></div>
+    <div class="modal__dialog">
+      <button type="button" class="modal__close" data-close-modal="true" aria-label="Fermer">×</button>
+      <h2 id="entry-modal-title" style="margin: 0 0 14px; font-size: 1.25rem;">Ajouter</h2>
+      <form id="entry-modal-form" class="form-grid"></form>
+    </div>
+  </div>
+
+  <!-- Modale Studio Fiche Récap Parents -->
+  <div id="parent-report-modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal__backdrop" data-close-report="true"></div>
+    <div class="modal__dialog modal__dialog--xl">
+      <button type="button" class="modal__close" data-close-report="true" aria-label="Fermer">×</button>
+      <div class="card__head" style="padding-right: 36px;">
+        <div>
+          <h2 style="margin: 0; font-size: 1.35rem;">Studio Fiche Récap Parents</h2>
+          <p class="card__hint">Personnalise exactement ce que tes parents voient avant d'exporter ou d'imprimer.</p>
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button type="button" class="btn btn--subtle btn--sm" id="btn-copy-report">Copier texte</button>
+          <button type="button" class="btn btn--subtle btn--sm" id="btn-download-report-txt">Télécharger .txt</button>
+          <button type="button" class="btn btn--green btn--sm" id="btn-print-report">Imprimer / PDF</button>
+        </div>
+      </div>
+
+      <div class="report-studio">
+        <aside class="report-controls">
+          <strong style="font-size: 0.86rem;">Contenu de la fiche :</strong>
+          <label class="report-check">
+            <input type="checkbox" id="rep-only-parents" checked />
+            <span>Afficher uniquement le budget <strong>Parents</strong> (masquer l'argent Perso)</span>
+          </label>
+          <label class="report-check">
+            <input type="checkbox" id="rep-show-summary" checked />
+            <span>Synthèse Revenus / Dépenses / Solde</span>
+          </label>
+          <label class="report-check">
+            <input type="checkbox" id="rep-show-fixed" checked />
+            <span>Détail des charges fixes (Loyer, Élec...)</span>
+          </label>
+          <label class="report-check">
+            <input type="checkbox" id="rep-show-envelopes" checked />
+            <span>Totaux par catégorie (Courses, Santé...)</span>
+          </label>
+          <label class="report-check">
+            <input type="checkbox" id="rep-show-details" />
+            <span>Lister chaque dépense une par une</span>
+          </label>
+          <div style="margin-top: 6px;">
+            <label for="rep-custom-note" style="font-size: 0.8rem; color: var(--text-secondary);">Mot / explication pour les parents :</label>
+            <textarea id="rep-custom-note" class="input" rows="3" placeholder="Ex: Ce mois-ci j'ai fait le plein de courses en batch cooking..."></textarea>
+          </div>
+        </aside>
+
+        <article id="parent-report-sheet" class="report-sheet"></article>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/budget-engine.js"></script>
+  <script type="module" src="../../core/db.js"></script>
+  <script type="module" src="js/budget-app.js"></script>
+</body>
+</html>

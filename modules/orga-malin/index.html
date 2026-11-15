@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orga-Malin — Étudiant-Malin</title>
+  <link rel="stylesheet" href="css/orga.css" />
+</head>
+<body>
+  <!-- Barre parente commune -->
+  <div class="em-parent-bar">
+    <div class="container em-parent-bar__inner">
+      <a href="../../index.html" class="em-back-link">← Étudiant-Malin</a>
+      <div class="em-parent-bar__right">
+        <span id="em-sync-status" class="em-sync-badge">Connexion...</span>
+        <span id="em-user-email" style="opacity: 0.78;"></span>
+        <button type="button" id="em-btn-logout" class="em-parent-logout">Déconnexion</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- En-tête Orga-Malin -->
+  <header class="om-header">
+    <div class="container om-header__inner">
+      <div class="om-brand">
+        <div class="om-brand__icon">⏱</div>
+        <div>
+          <div class="om-brand__title">Orga-Malin</div>
+          <div class="om-brand__sub">Anti-procrastination, Backlog &amp; Agenda iPhone</div>
+        </div>
+      </div>
+
+      <div class="week-switcher" role="group" aria-label="Navigation semaine">
+        <button type="button" id="btn-prev-week" title="Semaine précédente">‹</button>
+        <span id="current-week-label">Semaine</span>
+        <button type="button" id="btn-next-week" title="Semaine suivante">›</button>
+      </div>
+
+      <div class="om-actions">
+        <input type="file" id="input-ics-file" accept=".ics,text/calendar" class="hidden" />
+        <button type="button" class="btn btn--subtle btn--sm" id="btn-import-ics" title="Importer un calendrier école ou iPhone (.ics)">
+          Importer .ics
+        </button>
+        <button type="button" class="btn btn--subtle btn--sm" id="btn-sync-batch-orga" title="Bloquer la session cuisine Batch-Malin dans la semaine">
+          Sync Batch-Malin
+        </button>
+        <button type="button" class="btn btn--blue btn--sm" id="btn-export-ics" title="Ouvrir dans l'app Calendrier de l'iPhone">
+          Exporter Agenda iPhone (.ics)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container om-main">
+    <!-- Ligne supérieure : Outil 1 (Sas Anti-Procrastination) + Outil 2 (Backlog Priorisé) -->
+    <section class="top-cockpit-grid">
+      <!-- Outil 1 : Sas Anti-Procrastination & Sprint Focus -->
+      <article class="card focus-card">
+        <div class="card__head" style="margin-bottom: 10px;">
+          <div>
+            <h2 class="card__title">Sas Anti-Procrastination</h2>
+            <p class="card__hint">Brise la friction en 5 min, puis enchaîne en sprint</p>
+          </div>
+        </div>
+
+        <div id="focus-mode-pills" class="focus-modes">
+          <button type="button" class="is-active" data-focus-mode="ignition">Amorçage 5m</button>
+          <button type="button" data-focus-mode="sprint25">Sprint 25m</button>
+          <button type="button" data-focus-mode="sprint45">Deep 45m</button>
+          <button type="button" data-focus-mode="break">Pause 5m</button>
+        </div>
+
+        <div class="focus-ring-box">
+          <svg width="148" height="148" viewBox="0 0 128 128">
+            <circle cx="64" cy="64" r="54" fill="none" stroke="#ececf0" stroke-width="9" />
+            <circle
+              id="focus-ring-progress"
+              cx="64"
+              cy="64"
+              r="54"
+              fill="none"
+              stroke="#ff9500"
+              stroke-width="9"
+              stroke-linecap="round"
+              stroke-dasharray="339.29"
+              stroke-dashoffset="0"
+            />
+          </svg>
+          <div class="focus-ring-center">
+            <div id="focus-clock-display" class="focus-clock">05:00</div>
+            <div id="focus-phase-label" class="focus-phase">Règle des 5 min</div>
+          </div>
+        </div>
+
+        <div class="focus-target-box">
+          <div class="focus-target-box__label">Cible verrouillée</div>
+          <div id="focus-task-title" class="focus-target-box__title">Aucune tâche sélectionnée</div>
+          <input
+            type="text"
+            id="focus-first-step-input"
+            class="focus-micro-input"
+            placeholder="Micro-action de 2 min pour démarrer sans réfléchir..."
+          />
+        </div>
+
+        <div class="focus-controls">
+          <button type="button" class="btn btn--primary" id="btn-focus-toggle">Démarrer</button>
+          <button type="button" class="btn btn--subtle" id="btn-focus-reset">Reset</button>
+          <button type="button" class="btn btn--green hidden" id="btn-focus-complete">Tâche finie ✓</button>
+        </div>
+
+        <div class="focus-footer">
+          <button type="button" class="btn btn--subtle btn--xs" id="btn-log-distraction">
+            + Noter une distraction (<span id="distraction-count-label">0</span>)
+          </button>
+          <span id="focus-stats-label">0 sprint validé</span>
+        </div>
+      </article>
+
+      <!-- Outil 2 : Backlog Priorisé -->
+      <article class="card">
+        <div class="card__head">
+          <div>
+            <h2 class="card__title">Backlog priorisé</h2>
+            <p class="card__hint">Clique sur <strong>Démarrer</strong> pour envoyer une tâche dans le sas, ou <strong>Planifier</strong> pour la poser sur l'agenda</p>
+          </div>
+          <button type="button" class="btn btn--primary btn--sm" id="btn-add-task">
+            + Nouvelle tâche
+          </button>
+        </div>
+
+        <div id="backlog-filter-pills" class="filter-pills">
+          <button type="button" class="filter-pill is-active" data-backlog-filter="all">Toutes actives</button>
+          <button type="button" class="filter-pill" data-backlog-filter="p1">P1 · Urgent &amp; Important</button>
+          <button type="button" class="filter-pill" data-backlog-filter="p2">P2 · À planifier</button>
+          <button type="button" class="filter-pill" data-backlog-filter="p3">P3 · Rapide</button>
+          <button type="button" class="filter-pill" data-backlog-filter="done">Terminées</button>
+        </div>
+
+        <ul id="backlog-list" class="backlog-list"></ul>
+      </article>
+    </section>
+
+    <!-- Outil 3 : Semainier Time-Blocking connecté iPhone (.ics) -->
+    <section class="card">
+      <div class="card__head">
+        <div>
+          <h2 class="card__title">Semainier Time-Blocking &amp; Synchronisation iPhone</h2>
+          <p class="card__hint">
+            Bloque tes créneaux réels ou importe ton fichier <code>.ics</code> (ENT / Calendrier Apple), puis exporte vers ton iPhone.
+          </p>
+        </div>
+        <button type="button" class="btn btn--subtle btn--sm" id="btn-add-block">
+          + Bloquer un créneau
+        </button>
+      </div>
+
+      <div id="week-grid" class="week-grid"></div>
+    </section>
+  </main>
+
+  <!-- Modale universelle d'ajout (Tâche ou Créneau Agenda) -->
+  <div id="entry-modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal__backdrop" data-close-modal="true"></div>
+    <div class="modal__dialog">
+      <button type="button" class="modal__close" data-close-modal="true" aria-label="Fermer">×</button>
+      <h2 id="entry-modal-title" style="margin: 0 0 14px; font-size: 1.25rem;">Ajouter</h2>
+      <form id="entry-modal-form" class="form-grid"></form>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/orga-engine.js"></script>
+  <script type="module" src="../../core/db.js"></script>
+  <script type="module" src="js/orga-app.js"></script>
+</body>
+</html>

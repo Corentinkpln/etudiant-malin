@@ -1,0 +1,329 @@
+:root {
+  --bg: #f5f5f7;
+  --surface: rgba(255, 255, 255, 0.82);
+  --surface-solid: #ffffff;
+  --text-primary: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --border: rgba(0, 0, 0, 0.08);
+  --accent: #0071e3;
+  --accent-hover: #0077ed;
+  --shadow-soft: 0 20px 50px rgba(0, 0, 0, 0.08);
+  --shadow-orb: 0 24px 60px rgba(0, 0, 0, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  background: radial-gradient(circle at 50% 20%, #ffffff 0%, var(--bg) 75%);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Barre supérieure commune */
+.em-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(245, 245, 247, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index: 50;
+}
+
+.em-brand {
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.em-user-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* Boutons & Inputs Apple */
+.em-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.em-btn:active {
+  transform: scale(0.97);
+}
+
+.em-btn--primary {
+  background: var(--accent);
+  color: #fff;
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 0.95rem;
+}
+
+.em-btn--primary:hover {
+  background: var(--accent-hover);
+}
+
+.em-btn--ghost {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-primary);
+  padding: 7px 14px;
+  font-size: 0.82rem;
+}
+
+.em-btn--ghost:hover {
+  background: rgba(0, 0, 0, 0.09);
+}
+
+/* Carte d'authentification */
+.auth-wrapper {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--surface);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 36px 30px;
+  box-shadow: var(--shadow-soft);
+  text-align: center;
+}
+
+.auth-card__logo {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #1d1d1f, #3a3a3c);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -0.03em;
+}
+
+.auth-card h1 {
+  margin: 0 0 6px;
+  font-size: 1.55rem;
+  letter-spacing: -0.03em;
+}
+
+.auth-card p {
+  margin: 0 0 24px;
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+}
+
+.em-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  background: rgba(255, 255, 255, 0.9);
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.em-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
+}
+
+.auth-error {
+  font-size: 0.84rem;
+  color: #d70015;
+  background: rgba(215, 0, 21, 0.08);
+  padding: 10px 12px;
+  border-radius: 12px;
+  margin-top: 4px;
+}
+
+.auth-switch {
+  margin-top: 18px;
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+}
+
+.auth-switch button {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Launcher Radial Apple */
+.launcher-stage {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding-top: 60px;
+}
+
+.orb-arena {
+  position: relative;
+  width: 480px;
+  height: 480px;
+  display: grid;
+  place-items: center;
+}
+
+.core-orb {
+  position: relative;
+  z-index: 10;
+  width: 164px;
+  height: 164px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: linear-gradient(160deg, #ffffff 0%, #ebebf0 100%);
+  box-shadow: var(--shadow-orb);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-family: inherit;
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+
+.core-orb:hover {
+  transform: scale(1.04);
+}
+
+.core-orb.is-open {
+  transform: scale(0.92);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+
+.core-orb__title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.core-orb__hint {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.satellite-orb {
+  position: absolute;
+  z-index: 5;
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  background: var(--surface-solid);
+  border: 1px solid var(--border);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.09);
+  text-decoration: none;
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(0px, 0px) scale(0.35);
+  transition:
+    transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.3s ease,
+    box-shadow 0.25s ease;
+}
+
+.orb-arena.is-expanded .satellite-orb {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(var(--tx), var(--ty)) scale(1);
+}
+
+.orb-arena.is-expanded .satellite-orb:hover {
+  transform: translate(var(--tx), var(--ty)) scale(1.08);
+  box-shadow: 0 20px 42px rgba(0, 0, 0, 0.14);
+}
+
+.satellite-orb__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-bottom: 6px;
+}
+
+.satellite-orb__title {
+  font-size: 0.84rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.satellite-orb__sub {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+@media (max-width: 520px) {
+  .orb-arena {
+    width: 340px;
+    height: 340px;
+  }
+  .core-orb {
+    width: 132px;
+    height: 132px;
+  }
+  .satellite-orb {
+    width: 92px;
+    height: 92px;
+  }
+}
